@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Calendar Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CHANGE ME">
+    <meta name="keywords" content="CHANGE ME">
+    <meta name="author" content="CHANGE ME">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Calendar Viewer - CIS2750</h1>
+            <p class="lead">Where Magic Happens</p>
+        </div>
+    </div>
+
+    <div id="subbody" class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="container statuspanel">
+                    <h1 align="center">Status Panel</h1>
+                    <div id="status-alerts" class="container scrollable-area">
+                        
+                    </div>
+                </div>
+                <div class="container filelogpanel">
+                        <h1 align="center">File Log Panel</h1>
+                        <div class="container scrollable-area">
+                            <table id="file-log" class="table table-hover table-dark">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">File Name (Click To Download)</th>
+                                        <th scope="col">Version</th>
+                                        <th scope="col">Product ID</th>
+                                        <th scope="col">No. of Events</th>
+                                        <th scope="col">No. of Properties</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- files are inserted in here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="container file-upload">
+                            <form id="stupid-form" enctype="multipart/form-data" action="/upload" method="POST">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="file" class="custom-file-input" id="customFile" name="filename" required pattern="([a-zA-Z0-9\s_\\.\-\(\):])+(.ics)">
+                                        <label id="filename-label" class="custom-file-label" for="customFile">Choose file</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <!-- <input type="submit" class="btn btn-block btn-primary"> -->
+                                        <button id="submit-file" type="submit" class="btn btn-block btn-primary">Submit File</button>
+                                    </div>    
+                                </div>
+                            </form>
+                        </div>
+                </div>
+                <div class="container calviewpanel">
+                    <h1 align="center">Calendar View Panel</h1>                         
+                            <div class="container scrollable-area">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <select id="calViewSelDrpDwn" class="custom-select">  <!--Call run() function-->
+                                            <option value="empty">Select Calendar</option>
+                                        </select>
+                                        <div id="insert-event-button" class="container">
+                                                
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <ul id="calInfo" class="list-group list-group-horizontal-sm">
+                                            <li id="versionLabel" class="list-group-item">Select Calendar</li>
+                                            <li id="prodidLabel" class="list-group-item">Select Calendar</li>
+                                            <li id="eventsNumLabel" class="list-group-item">Select Calendar</li>
+                                            <li id="propsNumLabel" class="list-group-item">Select Calendar</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <h3 align="center">Event List</h3>
+                                <table id="calEventsTable" class="table table-hover table-dark">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Event</th>
+                                                <th scope="col">Start Date</th>
+                                                <th scope="col">Start Time</th>
+                                                <th scope="col">Summary</th>
+                                                <th scope="col">Props</th>
+                                                <th scope="col">Alarms</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                        </tbody>
+                                </table>
+                            </div>
+                </div>
+
+                <div id="div-database" class="container databasepanel">
+                    <h1 align="center">Database Panel</h1>
+                    <form id="db-login-form" class="database-validation" novalidate>
+                        <label for="db-username">Username</label>
+                        <input type="text" class="form-control" id="db-username" name="uid" placeholder="username" value="" name="db-login" required>
+                        <div class="invalid-feedback">
+                            enter your goddamn username
+                        </div>    
+                        
+                        <label for="db-password">Password</label>
+                        <input type="password" class="form-control" id="db-password" placeholder="Password" name="dbpass" required>
+                        <div class="invalid-feedback">
+                            enter your fucking password
+                        </div>    
+
+                        <label for="db-name">DataBase Name</label>
+                        <input type="text" class="form-control" id="db-name" placeholder="Database Name" name="dbname" required>
+                        <div class="invalid-feedback">
+                            enter the damnm name
+                        </div>
+ 
+                        <button id="dblogin-button" type="button" class="btn btn-primary" style="margin-top: 5px;">Submit</button>
+                    </form>
+                    
+                </div>
+                <div id="database-operations" class="container">
+                    <h1 align="center">Database Operations</h1>
+                    <!-- <div class="row"> -->
+                        <!-- <div class="col-md-4"> -->
+                            
+                        <!-- </div> -->
+                        <div id="db-query-forms">
+                            <h3>Query Forms</h3>
+                            <form id="db-execute-querystr" novalidate>
+                                <label for="db-query">Looking In: </label>
+                                <select id="db-query-file" class="custom-select">  <!--Call run() function-->
+                                    
+                                </select>
+                    
+                                <label for="db-query-par">For: </label>
+                                <select id="db-query-par" class="custom-select">  <!--Call run() function-->
+                                    <option value="1">All Events</option>
+                                    <option value="2">Conflicting Events</option>
+                                    <option value="3">Events Which Start At: </option>
+                                    <option value="4">Events With Alarms</option>
+                                    <option value="5">Events With The Location: </option>
+                                    <option value="6">Events With The Organizer: </option>
+                                </select>
+                                
+                                <div id="db-querystr">
+
+                                </div>
+                                
+                                <button class="btn btn-primary" type="button" id="db-execute" style="margin-top: 5px;">Submit Query</button>
+
+                            </form>
+                        </div>
+                        <h3>Database Operations</h3>
+                        <button class="btn btn-primary btn-block" id="db-upload-files" style="margin-top: 5px;">Upload Files To DataBase</button>
+                        <button class="btn btn-primary btn-block" id="db-clear" style="margin-top: 5px;">Clear DataBase</button>
+                        <button class="btn btn-primary btn-block" id="db-details" style="margin-top: 5px;">DataBase Status</button>
+                    <!-- </div> -->
+                    
+                </div>
+
+            </div>
+            <div class="col-md-2">
+                <div class="container sticky">   
+                    
+                    <h1 align="center">Menu</h1>                        
+                    <button id="cr-cal-bt" type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#create-calendar">
+                        Create Calendar
+                    </button>              
+                    <button id="clear-stat-log" type="button" class="btn btn-primary btn-block">
+                        Clear Status Log
+                    </button>
+                        
+                </div>
+            </div>        
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Enter New Event Details</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form id="event-form" class="needs-validation" novalidate>
+                        <label for="uid-form">UID</label>
+                        <input type="text" class="form-control" id="uid-form" name="uid" placeholder="enter a uid..." value="" required>
+                        <div class="invalid-feedback">
+                            Please Enter a UID!
+                        </div>      
+                                  
+                        <label for="dtstart-date-form">Start Date</label>
+                        <input type="date" class="form-control" id="dtstart-form" name="st-date" required>
+                        <div class="invalid-feedback">
+                            Please Enter a Valid Start Date
+                        </div>    
+                                  
+                        <label for="dtstart-time-form">Start Time</label>
+                        <input type="time" class="form-control" id="dtstart-time-form" name="st-time" required>
+                        <div class="invalid-feedback">
+                            Please Enter a Valid Start Time
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="utc-check" name='utc' value="true">
+                            <label class="form-check-label" for="utc-check">UTC</label>
+                        </div>
+                        <br>
+
+                        <label for="summary-form">Summary</label>
+                        <textarea class="form-control" id="summary-form" name="summary" rows="3"></textarea>
+
+                        <button style="margin-top: 5px;" class="btn btn-primary" id="submit-event">Submit Event</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" id="create-calendar" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Enter Calendar Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-cal-form">
+                        <div class="form-group">
+                            <label for="filenameinput">File Name</label>
+                            <input type="text" class="form-control" id="filenameinput" aria-describedby="emailHelp" placeholder="enter filename">
+                            <small id="emailHelp" class="form-text text-muted">Dont add the .ics extention</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="prodidinput">Product ID</label>
+                            <input type="text" class="form-control" id="prodidinput" placeholder="...">
+                        </div>                
+                        <div class="form-group">
+                            <label for="version-input">Version</label>
+                            <input type="number" class="form-control" id="version-input" placeholder="0">
+                        </div>
+                        <h5>Add Event</h5>
+                        <div class="form-group">
+                            <label for="uid-input">UID</label>
+                            <input type="text" class="form-control" id="uid-input" placeholder="...">
+                        </div>                
+                        <div class="form-group">
+                            <label for="st-date-input">Start Date</label>
+                            <input type="date" class="form-control" id="st-date-input">
+                        </div>               
+                        <div class="form-group">
+                            <label for="st-time-input">Start Date</label>
+                            <input type="time" class="form-control" id="st-time-input">
+                        </div>
+                        <label for="summary-form-input">Summary</label>
+                        <textarea class="form-control" id="summary-form-input" name="summary" rows="3"></textarea> 
+                        <button id="insert-event-cal" type="button" style="margin-top: 5px; margin-bottom: 5px;" class="btn btn-primary">Insert Event</button>                                       
+                        <button id="calendar-preview" type="button" style="margin-top: 5px; margin-bottom: 5px;" class="btn btn-primary">Preview</button>
+                        <button id="clear-cal-form" type="reset" value="Reset" class="btn btn-secondary" style="margin-top: 5px; margin-bottom: 5px;">Clear</button>
+                        <button id="submit-calendar" type="button" class="btn btn-secondary" style="margin-top: 5px; margin-bottom: 5px;">Submit</button>
+                        <textarea class="form-control" id="calendar-preview-area" name="summary" rows="6" style="resize: none;"></textarea>
+                        <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                    </form>
+                </div>
+                <div class="modal-footer">                    
+                    <button id="close-cal-create" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="event-details" tabindex="-1" role="dialog" aria-labelledby="Event Details" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="events-summary-title"></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div id="event-details-list" class="modal-body">
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+    </div>
+
+    <div id="query-results-modal" class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 align="center">Results of Your Query</h3>
+                </div>
+                <div class="modal-body table-responsive-xl" style="overflow: scroll;">
+                    <table class="table table-hover table-dark">
+                        <thead>
+                            <tr id="query-results-header">
+                    
+                            </tr>
+                        </thead>
+                        <tbody id="query-results-body">
+                    
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <h2>No More Legumes</h2>
+        <p>Waqas Bakht</p>
+        <p>wbakht@uoguelph.ca</p>
+        <p>0981571</p>
+        <p>CIS2750 - Software Systems Development and Integration</p>
+        <p>Prof. Denis Nikitenko</p>
+    </div>
+
+    <script src="/index.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
